@@ -1,9 +1,9 @@
-import Papa, { type ParseResult } from "papaparse"
-import { Box, Typography, Paper, Stack, Divider } from "@mui/material"
-import { CloudUpload } from "@mui/icons-material"
-import type { CsvData } from "../types/types"
-import FileDisplay from "./FileDisplay"
-import { useRef } from "react"
+import Papa from 'papaparse'
+import { Box, Typography, Paper, Stack, Divider } from '@mui/material'
+import { CloudUpload } from '@mui/icons-material'
+import type { CsvData, CsvRawRow } from '../types/types'
+import FileDisplay from './FileDisplay'
+import { useRef } from 'react'
 
 interface Props {
   file: File | undefined
@@ -15,18 +15,25 @@ const FileUpload = ({ file, onUpload, onDelete }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const isFileAdded = !!file
 
-  const boxBgColor = isFileAdded ? "white" : "#EFF6FF"
-  const borderColor = isFileAdded ? "#94A3B8" : "#2463EB"
+  const boxBgColor = isFileAdded ? 'white' : '#EFF6FF'
+  const borderColor = isFileAdded ? '#94A3B8' : '#2463EB'
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0]
 
     if (selectedFile) {
-      Papa.parse(selectedFile, {
+      Papa.parse<CsvRawRow>(selectedFile, {
         header: true,
         skipEmptyLines: true,
-        complete: (result: ParseResult<CsvData>) => {
-          onUpload(result.data, selectedFile)
+        complete: (result) => {
+          const mappedData: CsvData[] = result.data.map((item, index) => ({
+            no: Number(item.No ?? index + 1),
+            organizationName: item['Organization Name'] ?? '',
+            staffId: item['Staff ID'] ?? '',
+            fullName: item['Full Name'] ?? '',
+          }))
+
+          onUpload(mappedData, selectedFile)
         },
       })
     }
@@ -34,7 +41,7 @@ const FileUpload = ({ file, onUpload, onDelete }: Props) => {
 
   const handleDelete = () => {
     if (inputRef.current) {
-      inputRef.current.value = ""
+      inputRef.current.value = ''
     }
     onDelete()
   }
@@ -45,9 +52,9 @@ const FileUpload = ({ file, onUpload, onDelete }: Props) => {
         paddingX: 2,
         paddingTop: 2,
         paddingBottom: 4,
-        bgcolor: "#FFFFFF",
+        bgcolor: '#FFFFFF',
         borderRadius: 2,
-        boxShadow: 1
+        boxShadow: 1,
       }}
     >
       <Stack
@@ -59,7 +66,7 @@ const FileUpload = ({ file, onUpload, onDelete }: Props) => {
         <Box>
           <Typography
             variant="subtitle1"
-            sx={{ fontWeight: 600, color: "#000000" }}
+            sx={{ fontWeight: 600, color: '#000000' }}
           >
             Import the barcode data
           </Typography>
@@ -74,25 +81,25 @@ const FileUpload = ({ file, onUpload, onDelete }: Props) => {
       <Paper
         variant="outlined"
         sx={{
-          border: "2px dashed",
+          border: '2px dashed',
           borderColor: borderColor,
           borderRadius: 2,
-          bgcolor: "white",
-          ":hover": { bgcolor: boxBgColor },
-          cursor: isFileAdded ? "default" : "pointer",
-          transition: "all 0.2s",
+          bgcolor: 'white',
+          ':hover': { bgcolor: boxBgColor },
+          cursor: isFileAdded ? 'default' : 'pointer',
+          transition: 'all 0.2s',
           marginTop: 2,
-          height: "150px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          height: '150px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
         {isFileAdded ? (
           <FileDisplay file={file} onDelete={handleDelete} />
         ) : (
           <label
-            className={`${isFileAdded ? "cursor-default" : "cursor-pointer"} block p-5`}
+            className={`${isFileAdded ? 'cursor-default' : 'cursor-pointer'} block p-5`}
           >
             <input
               ref={inputRef}
@@ -107,18 +114,18 @@ const FileUpload = ({ file, onUpload, onDelete }: Props) => {
                 sx={{
                   width: 36,
                   height: 36,
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  bgcolor: "white",
-                  color: "#4F67FF",
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  bgcolor: 'white',
+                  color: '#4F67FF',
                 }}
               >
                 <CloudUpload fontSize="medium" />
               </Box>
 
-              <Box sx={{ textAlign: "center" }}>
+              <Box sx={{ textAlign: 'center' }}>
                 <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5 }}>
                   Click to upload or drag or drop
                 </Typography>

@@ -19,6 +19,7 @@
     "buffer": "^6.0.3",
     "file-saver": "^2.0.5",
     "jsbarcode": "^3.12.3",
+    "material-react-table": "^3.2.1",
     "papaparse": "^5.5.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

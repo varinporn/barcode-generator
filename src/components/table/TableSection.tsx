@@ -1,35 +1,33 @@
-import React, { useState } from "react"
-import DataTable from "./DataTable"
-import PopupModal from "../PopupModal"
 import { type CsvData } from "../../types/types"
+import DataTable from "./DataTable"
 
 interface Props {
   data: CsvData[]
-  setData: React.Dispatch<React.SetStateAction<CsvData[]>>
+  // setData: React.Dispatch<React.SetStateAction<CsvData[]>>
 }
 
-const TableSection = ({ data, setData }: Props) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedRow, setSelectedRow] = useState<CsvData | null>(null)
+const TableSection = ({ data }: Props) => {
+  // const [isModalOpen, setIsModalOpen] = useState(false)
+  // const [selectedRow, setSelectedRow] = useState<CsvData | null>(null)
 
-  const handleDeleteClick = (row: CsvData) => {
-    setSelectedRow(row)
-    setIsModalOpen(true)
-  }
+  // const handleDeleteClick = (row: CsvData) => {
+  //   setSelectedRow(row)
+  //   setIsModalOpen(true)
+  // }
 
-  const handleConfirmDelete = () => {
-    if (selectedRow) {
-      const updatedData = data.filter(
-        (item) => item["Staff ID"] !== selectedRow["Staff ID"],
-      )
-      setData(updatedData)
-    }
-  }
+  // const handleConfirmDelete = () => {
+  //   if (selectedRow) {
+  //     const updatedData = data.filter(
+  //       (item) => item["Staff ID"] !== selectedRow["Staff ID"],
+  //     )
+  //     setData(updatedData)
+  //   }
+  // }
 
   return (
     <>
-      <DataTable data={data} onDelete={handleDeleteClick} />
-
+      <DataTable data={data} />
+{/* 
       <PopupModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -37,7 +35,7 @@ const TableSection = ({ data, setData }: Props) => {
         heading="Confirm Deletion"
         message={`Are you sure you want to delete ${selectedRow?.["Full Name"]}?`}
         confirmButton="Delete"
-      />
+      /> */}
     </>
   )
 }

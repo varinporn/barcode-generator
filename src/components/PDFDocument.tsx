@@ -47,7 +47,7 @@ const PDFDocument = ({ data }: Props) => (
   <Document>
     <Page size="A4" style={styles.page}>
       {data.map((row, index) => {
-        const barcodeValue = `${row["Organization Name"]} ${row["Staff ID"]} ${row["Full Name"]}`
+        const barcodeValue = `${row["organizationName"]} ${row["staffId"]} ${row["fullName"]}`
 
         const barcodeSrc = getBarcodeUrl(barcodeValue)
 
