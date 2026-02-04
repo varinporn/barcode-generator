@@ -15,14 +15,12 @@ import TableContainer from "@mui/material/TableContainer"
 import TableHead from "@mui/material/TableHead"
 import TablePagination from "@mui/material/TablePagination"
 import TableRow from "@mui/material/TableRow"
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined"
 
 import DeleteIcon from "@mui/icons-material/Delete"
 import type { CsvData } from "../../types/types"
 
 interface Props {
   data: CsvData[]
-  onEdit?: (row: CsvData) => void
   onDelete?: (row: CsvData) => void
 }
 
@@ -41,7 +39,7 @@ const columns: readonly Column[] = [
   { id: "Actions", label: "Actions", minWidth: 100, align: "center" },
 ]
 
-const DataTable = ({ data, onEdit, onDelete }: Props) => {
+const DataTable = ({ data, onDelete }: Props) => {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
 
@@ -119,20 +117,6 @@ const DataTable = ({ data, onEdit, onDelete }: Props) => {
                                 spacing={1.5}
                                 justifyContent="center"
                               >
-                                {/* <Tooltip title="Edit">
-                                  <IconButton
-                                    size="small"
-                                    onClick={() => onEdit?.(row)}
-                                    sx={{
-                                      color: "text.secondary",
-                                      border: "1px solid",
-                                      borderColor: "divider",
-                                      borderRadius: "8px",
-                                    }}
-                                  >
-                                    <ModeEditOutlineOutlinedIcon fontSize="small" />
-                                  </IconButton>
-                                </Tooltip> */}
 
                                 <Tooltip title="Delete">
                                   <IconButton
