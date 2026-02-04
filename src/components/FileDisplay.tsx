@@ -8,7 +8,7 @@ interface Props {
 
 const FileDisplay = ({ file, onDelete }: Props) => {
   return (
-    <Box sx={{width: "100%", px: 4}}>
+    <Box sx={{width: "100%", pt: 1, pb: 4}}>
         <Stack
           spacing={2}
           alignItems="center"

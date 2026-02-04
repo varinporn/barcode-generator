@@ -1,9 +1,11 @@
-import { useState } from "react"
-import { pdf } from "@react-pdf/renderer"
-import { saveAs } from "file-saver"
-import PDFDocument from "./PDFDocument"
+import { useState } from 'react'
+import { pdf } from '@react-pdf/renderer'
+import { saveAs } from 'file-saver'
+import PDFDocument from './PDFDocument'
+import type { CsvData } from '../types/types'
+import AppButton from './AppButton'
 
-const PDFDownload = ({ data }: { data: any[] }) => {
+const PDFDownload = ({ data }: { data: CsvData[] }) => {
   const [isGenerating, setIsGenerating] = useState(false)
   const hasData = data.length > 0
 
@@ -14,9 +16,9 @@ const PDFDownload = ({ data }: { data: any[] }) => {
       try {
         const doc = <PDFDocument data={data} />
         const blob = await pdf(doc).toBlob()
-        saveAs(blob, "generate_barcode.pdf")
+        saveAs(blob, 'generate_barcode.pdf')
       } catch (error) {
-        console.error("PDF Error:", error)
+        console.error('PDF Error:', error)
       } finally {
         setIsGenerating(false)
       }
@@ -24,21 +26,14 @@ const PDFDownload = ({ data }: { data: any[] }) => {
   }
 
   return (
-    <div className="flex justify-end mb-4">
-      <button
-        onClick={handleDownload}
-        disabled={!hasData || isGenerating}
-        className={`${
-          !hasData
-            ? "bg-gray-300 cursor-not-allowed"
-            : isGenerating
-              ? "bg-gray-400 animate-pulse cursor-wait"
-              : "bg-blue-600 hover:bg-blue-700 shadow-sm cursor-pointer"
-        } text-white px-6 py-2.5 rounded-lg font-semibold transition`}
-      >
-        {isGenerating ? `Generating PDF...` : "Download PDF"}
-      </button>
-    </div>
+    <AppButton
+      onClick={handleDownload}
+      disabled={!hasData}
+      loading={isGenerating}
+      loadingMessage="Generating PDF..."
+    >
+      Download PDF
+    </AppButton>
   )
 }
 

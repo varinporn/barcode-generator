@@ -7,6 +7,7 @@ import {
 import { MenuItem } from '@mui/material'
 
 import { type CsvData } from '../../types/types'
+import { getBarcodeUrl } from '../../utils/BarcodeUtils'
 
 interface Props {
   data: CsvData[]
@@ -36,7 +37,6 @@ const DataTable = ({ data }: Props) => {
       {
         accessorKey: 'organizationName',
         header: 'Organization Name',
-        size: 240,
       },
       {
         accessorKey: 'staffId',
@@ -47,8 +47,19 @@ const DataTable = ({ data }: Props) => {
         header: 'Full Name',
       },
       {
-        accessorKey: 'barcode',
+        id: 'barcode',
         header: 'Barcode',
+        size: 240,
+        accessorFn: (row) =>
+          `${row.organizationName}|${row.staffId}|${row.fullName}`,
+        Cell: ({ cell }) => {
+          const value = cell.getValue<string>()
+          if (!value) return '-'
+
+          const barcodeUrl = getBarcodeUrl(value)
+
+          return <img src={barcodeUrl} alt={value} style={{ height: 60 }} />
+        },
       },
     ],
     [],
@@ -57,10 +68,17 @@ const DataTable = ({ data }: Props) => {
   const table = useMaterialReactTable({
     columns,
     data,
+
     enableColumnPinning: true,
     enableRowActions: true,
     positionActionsColumn: 'last',
     layoutMode: 'semantic',
+    muiTableContainerProps: {
+      sx: {
+        minHeight: 300,
+        maxHeight: 500,
+      },
+    },
     renderRowActionMenuItems: () => [<MenuItem key="action">Action</MenuItem>],
   })
 
