@@ -29,6 +29,7 @@ const PDFDownload = () => {
 
   return (
     <AppButton
+      color="secondary"
       onClick={handleDownload}
       disabled={!hasData}
       loading={isGenerating}

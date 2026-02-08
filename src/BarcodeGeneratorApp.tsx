@@ -66,8 +66,8 @@ const BarcodeGeneratorApp = () => {
         }}
       >
         <Stack direction="row" spacing={2} sx={{pb: 2}}>
-          <AppButton onClick={() => setOpenImportModal(true)}>Import</AppButton>
-          <AppButton onClick={() => setOpenAddModal(true)}>
+          <AppButton color='info' onClick={() => setOpenImportModal(true)}>Import</AppButton>
+          <AppButton color='primary' onClick={() => setOpenAddModal(true)}>
             Add Resource
           </AppButton>
           <PDFDownload />
