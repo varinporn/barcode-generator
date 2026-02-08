@@ -1,25 +1,22 @@
 import { useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import {
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
 } from 'material-react-table'
-import { MenuItem } from '@mui/material'
-
-import { type CsvData } from '../../types/types'
+import type { RootState } from '../../stores/store'
+import { type Resource } from '../../types/types'
 import { getBarcodeUrl } from '../../utils/BarcodeUtils'
 
-interface Props {
-  data: CsvData[]
-}
-
-const DataTable = ({ data }: Props) => {
-  const columns = useMemo<MRT_ColumnDef<CsvData>[]>(
+const DataTable = () => {
+  const data = useSelector((state: RootState) => state.resource.resources)
+  const columns = useMemo<MRT_ColumnDef<Resource>[]>(
     () => [
       {
-        accessorKey: 'no',
         enableColumnPinning: false,
         header: 'No',
+        Cell: ({ row }) => row.index + 1,
         size: 130,
         muiTableBodyCellProps: {
           sx: {
@@ -37,6 +34,8 @@ const DataTable = ({ data }: Props) => {
       {
         accessorKey: 'organizationName',
         header: 'Organization Name',
+        filterVariant: 'select',
+        filterSelectOptions: ['TTB'],
       },
       {
         accessorKey: 'staffId',
@@ -68,10 +67,10 @@ const DataTable = ({ data }: Props) => {
   const table = useMaterialReactTable({
     columns,
     data,
-
+    initialState: {
+      columnFilters: [],
+    },
     enableColumnPinning: true,
-    enableRowActions: true,
-    positionActionsColumn: 'last',
     layoutMode: 'semantic',
     muiTableContainerProps: {
       sx: {
@@ -79,7 +78,6 @@ const DataTable = ({ data }: Props) => {
         maxHeight: 500,
       },
     },
-    renderRowActionMenuItems: () => [<MenuItem key="action">Action</MenuItem>],
   })
 
   return <MaterialReactTable table={table} />

@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { pdf } from '@react-pdf/renderer'
 import { saveAs } from 'file-saver'
 import PDFDocument from './PDFDocument'
-import type { CsvData } from '../types/types'
 import AppButton from './AppButton'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../stores/store'
 
-const PDFDownload = ({ data }: { data: CsvData[] }) => {
+const PDFDownload = () => {
+  const data = useSelector((state: RootState) => state.resource.resources)
   const [isGenerating, setIsGenerating] = useState(false)
   const hasData = data.length > 0
 

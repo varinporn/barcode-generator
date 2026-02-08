@@ -6,7 +6,7 @@ import {
   Image,
   Text,
 } from "@react-pdf/renderer"
-import type { CsvData } from "../types/types"
+import type { Resource } from "../types/types"
 import { getBarcodeUrl } from "../utils/BarcodeUtils"
 
 const styles = StyleSheet.create({
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 })
 
 interface Props {
-  data: CsvData[]
+  data: Resource[]
 }
 
 const PDFDocument = ({ data }: Props) => (

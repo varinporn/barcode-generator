@@ -1,27 +1,39 @@
 import { useState } from 'react'
-import TableSection from './components/table/TableSection'
-import FileUpload from './components/FileUpload'
+import FileUpload from './components/uploadCsv/FileUpload'
 import Header from './components/Header'
 import { Box, Stack } from '@mui/material'
-import { type CsvData } from './types/types'
 import PDFDownload from './components/PDFDownload'
 import PopupModal from './components/PopupModal'
 import { parseCsvFile } from './utils/CsvParser'
-import FileDisplay from './components/FileDisplay'
+import FileDisplay from './components/uploadCsv/FileDisplay'
 import AppButton from './components/AppButton'
+import AddForm from './components/AddForm'
+import { useDispatch } from 'react-redux'
+import { type AppDispatch } from './stores/store'
+import { addResources } from './stores/slices/resourceSlice'
+import DataTable from './components/table/DataTable'
 
 const BarcodeGeneratorApp = () => {
-  const [data, setData] = useState<CsvData[]>([])
+  const dispatch = useDispatch<AppDispatch>()
   const [selectedFile, setSelectedFile] = useState<File | undefined>()
-  const [openModal, setOpenModal] = useState(false)
+  const [openImportModal, setOpenImportModal] = useState(false)
+  const [openAddModal, setOpenAddModal] = useState(false)
 
   const handleImport = async () => {
     if (!selectedFile) return
 
     try {
       const parsedData = await parseCsvFile(selectedFile)
-      setData(parsedData)
-      setOpenModal(false)
+      dispatch(
+        addResources(
+          parsedData.map((item) => ({
+            ...item,
+          })),
+        ),
+      )
+
+      setOpenImportModal(false)
+      setSelectedFile(undefined)
     } catch (error) {
       console.error('CSV parse error', error)
     }
@@ -47,15 +59,19 @@ const BarcodeGeneratorApp = () => {
           gap: 2,
         }}
       >
-        <Stack direction="row" spacing={4}>
-          <AppButton onClick={() => setOpenModal(true)}>Import</AppButton>
-          <PDFDownload data={data} />
+        <Stack direction="row" spacing={2}>
+          <AppButton onClick={() => setOpenImportModal(true)}>Import</AppButton>
+          <AppButton onClick={() => setOpenAddModal(true)}>
+            Add Resource
+          </AppButton>
+          <PDFDownload />
+          <AppButton color="error">Delete All</AppButton>
         </Stack>
 
-        {openModal && (
+        {openImportModal && (
           <PopupModal
-            open={openModal}
-            onClose={() => setOpenModal(false)}
+            open={openImportModal}
+            onClose={() => setOpenImportModal(false)}
             heading="Import CSV File"
             confirmButton="Import"
             onConfirm={handleImport}
@@ -72,8 +88,18 @@ const BarcodeGeneratorApp = () => {
           </PopupModal>
         )}
 
+        {openAddModal && (
+          <PopupModal
+            open={openAddModal}
+            onClose={() => setOpenAddModal(false)}
+            heading="Add Resource"
+          >
+            <AddForm onCancel={() => setOpenAddModal(false)} />
+          </PopupModal>
+        )}
+
         <Box sx={{ flexGrow: 1 }}>
-          <TableSection data={data} />
+          <DataTable />
         </Box>
       </Box>
     </div>
