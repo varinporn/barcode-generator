@@ -10,7 +10,7 @@ import AppButton from './components/AppButton'
 import AddForm from './components/AddForm'
 import { useDispatch } from 'react-redux'
 import { type AppDispatch } from './stores/store'
-import { addResources } from './stores/slices/resourceSlice'
+import { addResources, setResources } from './stores/slices/resourceSlice'
 import DataTable from './components/table/DataTable'
 
 const BarcodeGeneratorApp = () => {
@@ -18,6 +18,7 @@ const BarcodeGeneratorApp = () => {
   const [selectedFile, setSelectedFile] = useState<File | undefined>()
   const [openImportModal, setOpenImportModal] = useState(false)
   const [openAddModal, setOpenAddModal] = useState(false)
+  const [openConfirmDeleteModal, setOpenConfirmDeleteModal] = useState(false)
 
   const handleImport = async () => {
     if (!selectedFile) return
@@ -43,6 +44,10 @@ const BarcodeGeneratorApp = () => {
     setSelectedFile(undefined)
   }
 
+  const handleDeleteAll = () => {
+    dispatch(setResources([]))
+  }
+
   return (
     <div className="h-screen">
       <Header />
@@ -52,20 +57,26 @@ const BarcodeGeneratorApp = () => {
           flexGrow: 1,
           bgcolor: '#F6F8FB',
           px: 8,
-          py: 4,
+          pt: 6,
+          pb: 4,
           minHeight: '100%',
           display: 'flex',
           flexDirection: 'column',
           gap: 2,
         }}
       >
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} sx={{pb: 2}}>
           <AppButton onClick={() => setOpenImportModal(true)}>Import</AppButton>
           <AppButton onClick={() => setOpenAddModal(true)}>
             Add Resource
           </AppButton>
           <PDFDownload />
-          <AppButton color="error">Delete All</AppButton>
+          <AppButton
+            color="error"
+            onClick={() => setOpenConfirmDeleteModal(true)}
+          >
+            Delete All
+          </AppButton>
         </Stack>
 
         {openImportModal && (
@@ -96,6 +107,17 @@ const BarcodeGeneratorApp = () => {
           >
             <AddForm onCancel={() => setOpenAddModal(false)} />
           </PopupModal>
+        )}
+
+        {openConfirmDeleteModal && (
+          <PopupModal
+            open={openConfirmDeleteModal}
+            onClose={() => setOpenConfirmDeleteModal(false)}
+            heading="Do you want to delete all resources?"
+            message='This action is permanent and cannot be undone.'
+            confirmButton="Confirm"
+            onConfirm={handleDeleteAll}
+          ></PopupModal>
         )}
 
         <Box sx={{ flexGrow: 1 }}>

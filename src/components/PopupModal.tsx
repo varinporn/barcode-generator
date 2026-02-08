@@ -50,7 +50,7 @@ export default function PopupModal({
 
         {confirmButton && (
           <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <Button onClick={onClose} color="inherit">
+            <Button onClick={onClose} color="inherit" sx={{border: 1, borderColor: '#D3D3D3'}}>
               Cancel
             </Button>
 
