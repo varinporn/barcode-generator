@@ -1,8 +1,8 @@
-import BarcodeGeneratorApp from "./BarcodeGeneratorApp"
+import BarcodeGeneratorApp from './BarcodeGeneratorApp'
 
 const App = () => {
   return (
-    <div>
+    <div className="font-sans">
       <BarcodeGeneratorApp />
     </div>
   )

@@ -24,7 +24,7 @@ const AppButton = ({
       disableElevation
       sx={{
         px: 3,
-        py: 1.2,
+        py: 1,
         borderRadius: 2,
         fontWeight: 600,
         textTransform: 'none',
