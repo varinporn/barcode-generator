@@ -19,6 +19,7 @@ interface Props {
   heading: string
   message?: string
   confirmButton?: string
+  disableConfirm?: boolean
   color?: 'primary' | 'error'
   children?: React.ReactNode
 }
@@ -27,6 +28,7 @@ export default function PopupModal({
   open,
   onClose,
   onConfirm,
+  disableConfirm,
   heading,
   message,
   confirmButton,
@@ -50,7 +52,11 @@ export default function PopupModal({
 
         {confirmButton && (
           <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <Button onClick={onClose} color="inherit" sx={{border: 1, borderColor: '#D3D3D3'}}>
+            <Button
+              onClick={onClose}
+              color="inherit"
+              sx={{ border: 1, borderColor: '#D3D3D3' }}
+            >
               Cancel
             </Button>
 
@@ -59,10 +65,15 @@ export default function PopupModal({
                 onConfirm?.()
                 onClose()
               }}
-              disabled={!onConfirm}
+              disabled={!onConfirm || disableConfirm}
               variant="contained"
               color={color}
-              sx={{ px: 2, borderRadius: 2, fontWeight: 600 }}
+              sx={{
+                px: 2,
+                borderRadius: 2,
+                fontWeight: 600,
+                opacity: disableConfirm ? 0.6 : 1,
+              }}
               disableElevation
             >
               {confirmButton}

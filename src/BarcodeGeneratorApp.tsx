@@ -65,9 +65,11 @@ const BarcodeGeneratorApp = () => {
           gap: 2,
         }}
       >
-        <Stack direction="row" spacing={2} sx={{pb: 2}}>
-          <AppButton color='info' onClick={() => setOpenImportModal(true)}>Import</AppButton>
-          <AppButton color='primary' onClick={() => setOpenAddModal(true)}>
+        <Stack direction="row" spacing={2} sx={{ pb: 2 }}>
+          <AppButton color="info" onClick={() => setOpenImportModal(true)}>
+            Import
+          </AppButton>
+          <AppButton color="primary" onClick={() => setOpenAddModal(true)}>
             Add Resource
           </AppButton>
           <PDFDownload />
@@ -86,6 +88,7 @@ const BarcodeGeneratorApp = () => {
             heading="Import CSV File"
             confirmButton="Import"
             onConfirm={handleImport}
+            disableConfirm={!selectedFile}
           >
             <FileUpload
               file={selectedFile}
@@ -114,10 +117,10 @@ const BarcodeGeneratorApp = () => {
             open={openConfirmDeleteModal}
             onClose={() => setOpenConfirmDeleteModal(false)}
             heading="Do you want to delete all resources?"
-            message='This action is permanent and cannot be undone.'
+            message="This action is permanent and cannot be undone."
             confirmButton="Confirm"
             onConfirm={handleDeleteAll}
-          ></PopupModal>
+          />
         )}
 
         <Box sx={{ flexGrow: 1 }}>
