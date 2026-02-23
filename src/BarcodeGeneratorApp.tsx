@@ -151,8 +151,8 @@ const BarcodeGeneratorApp = () => {
           <PopupModal
             open={openDeleteRowModal}
             onClose={() => setOpenDeleteRowModal(false)}
-            heading="Delete Resource?"
-            message={`Do you want to delete ${selectedResource?.fullName}? This action cannot be undone.`}
+            heading={`Do you want to delete ${selectedResource?.fullName}?`}
+            message={`This action is permanent and cannot be undone.`}
             confirmButton="Confirm"
             onConfirm={handleConfirmDelete}
           />
