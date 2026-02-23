@@ -10,15 +10,25 @@ import AppButton from './components/AppButton'
 import AddForm from './components/AddForm'
 import { useDispatch } from 'react-redux'
 import { type AppDispatch } from './stores/store'
-import { addResources, setResources } from './stores/slices/resourceSlice'
+import {
+  addResources,
+  setResources,
+  removeResource,
+} from './stores/slices/resourceSlice'
 import DataTable from './components/table/DataTable'
+import type { Resource } from './types/types'
 
 const BarcodeGeneratorApp = () => {
   const dispatch = useDispatch<AppDispatch>()
   const [selectedFile, setSelectedFile] = useState<File | undefined>()
   const [openImportModal, setOpenImportModal] = useState(false)
   const [openAddModal, setOpenAddModal] = useState(false)
-  const [openConfirmDeleteModal, setOpenConfirmDeleteModal] = useState(false)
+  const [openDeleteAllModal, setOpenDeleteAllModal] = useState(false)
+  const [openDeleteRowModal, setOpenDeleteRowModal] = useState(false)
+
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(
+    null,
+  )
 
   const handleImport = async () => {
     if (!selectedFile) return
@@ -46,6 +56,21 @@ const BarcodeGeneratorApp = () => {
 
   const handleDeleteAll = () => {
     dispatch(setResources([]))
+    setOpenDeleteAllModal(false)
+  }
+
+  const handleConfirmDelete = () => {
+    if (!selectedResource) return
+
+    dispatch(removeResource(selectedResource.staffId))
+
+    setOpenDeleteRowModal(false)
+    setSelectedResource(null)
+  }
+
+  const handleDeleteRow = (resource: Resource) => {
+    setSelectedResource(resource)
+    setOpenDeleteRowModal(true)
   }
 
   return (
@@ -73,10 +98,7 @@ const BarcodeGeneratorApp = () => {
             Add Resource
           </AppButton>
           <PDFDownload />
-          <AppButton
-            color="error"
-            onClick={() => setOpenConfirmDeleteModal(true)}
-          >
+          <AppButton color="error" onClick={() => setOpenDeleteAllModal(true)}>
             Delete All
           </AppButton>
         </Stack>
@@ -112,19 +134,32 @@ const BarcodeGeneratorApp = () => {
           </PopupModal>
         )}
 
-        {openConfirmDeleteModal && (
+        {openDeleteAllModal && (
           <PopupModal
-            open={openConfirmDeleteModal}
-            onClose={() => setOpenConfirmDeleteModal(false)}
+            open={openDeleteAllModal}
+            onClose={() => setOpenDeleteAllModal(false)}
             heading="Do you want to delete all resources?"
             message="This action is permanent and cannot be undone."
             confirmButton="Confirm"
-            onConfirm={handleDeleteAll}
+            onConfirm={() => {
+              handleDeleteAll()
+            }}
+          />
+        )}
+
+        {openDeleteRowModal && (
+          <PopupModal
+            open={openDeleteRowModal}
+            onClose={() => setOpenDeleteRowModal(false)}
+            heading="Delete Resource?"
+            message={`Do you want to delete ${selectedResource?.fullName}? This action cannot be undone.`}
+            confirmButton="Confirm"
+            onConfirm={handleConfirmDelete}
           />
         )}
 
         <Box sx={{ flexGrow: 1 }}>
-          <DataTable />
+          <DataTable onDelete={handleDeleteRow} />
         </Box>
       </Box>
     </div>

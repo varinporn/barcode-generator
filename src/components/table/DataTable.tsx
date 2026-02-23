@@ -8,8 +8,14 @@ import {
 import type { RootState } from '../../stores/store'
 import { type Resource } from '../../types/types'
 import { getBarcodeUrl } from '../../utils/BarcodeUtils'
+import { Box, IconButton, Tooltip } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
 
-const DataTable = () => {
+interface Props {
+  onDelete: (resource: Resource) => void
+}
+
+const DataTable = ({ onDelete }: Props) => {
   const data = useSelector((state: RootState) => state.resource.resources)
   const columns = useMemo<MRT_ColumnDef<Resource>[]>(
     () => [
@@ -72,6 +78,19 @@ const DataTable = () => {
     },
     enableColumnPinning: true,
     layoutMode: 'semantic',
+
+    enableRowActions: true,
+    positionActionsColumn: 'last',
+    renderRowActions: ({ row }) => (
+      <Box>
+        <Tooltip title="Delete">
+          <IconButton color="error" onClick={() => onDelete(row.original)}>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ),
+
     muiTableContainerProps: {
       sx: {
         minHeight: 300,

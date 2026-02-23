@@ -28,9 +28,15 @@ const resourceSlice = createSlice({
 
       state.resources.push(newItem)
     },
+    removeResource(state, action: PayloadAction<string>) {
+      state.resources = state.resources.filter(
+        (item) => item.staffId !== action.payload,
+      )
+    },
   },
 })
 
-export const { setResources, addResources, addResource } = resourceSlice.actions
+export const { setResources, addResources, addResource, removeResource } =
+  resourceSlice.actions
 
 export default resourceSlice.reducer
